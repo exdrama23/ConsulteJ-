@@ -1,0 +1,422 @@
+/* Reset e Variáveis CSS - Estilo Google */
+:root {
+  --background: #ffffff;
+  --surface: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #5f6368;
+  --text-muted: #70757a;
+  --border: #dadce0;
+  --border-light: #f1f3f4;
+  --shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+  --shadow-light: 0 1px 3px rgba(32, 33, 36, 0.16);
+  --radius: 8px;
+  --radius-sm: 4px;
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --ripple-color: rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', 'Arial', sans-serif;
+  background: var(--background);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header - Estilo Google */
+h1 {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 8px;
+  margin-top: 40px;
+  letter-spacing: -0.5px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+p {
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 14px;
+}
+
+/* Área de Input - Estilo Google Search */
+.input-area {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  max-width: 784px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  font-size: 15px;
+  transition: var(--transition);
+  background: var(--surface);
+  color: var(--text-primary);
+  height: 46px;
+}
+
+.input-area input:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: var(--shadow);
+}
+
+.input-area input::placeholder {
+  color: var(--text-muted);
+}
+
+/* === BOTÕES ESTILO GOOGLE MATERIAL === */
+/* Botões com animações e proporções corrigidas */
+button,
+.input-area button,
+.edit-area button,
+.btn-alterar,
+.btn-remover,
+.preco-custom button,
+.lista button {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  font-size: 14px; /* Tamanho proporcional e legível */
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  background: #f8f9fa;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-light);
+  padding: 10px 20px; /* Espaçamento interno equilibrado */
+  display: inline-flex; /* Permite centralização */
+  align-items: center;
+  justify-content: center; /* Centraliza o texto */
+  text-align: center;
+  line-height: 1.2; /* Altura de linha mais natural */
+  min-height: 40px; /* Garante altura mínima uniforme */
+}
+
+/* Efeito ripple */
+button::after,
+.input-area button::after,
+.edit-area button::after,
+.btn-alterar::after,
+.btn-remover::after,
+.preco-custom button::after,
+.lista button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.6s ease;
+}
+
+/* Hover e interação */
+button:hover,
+.input-area button:hover,
+.edit-area button:hover,
+.btn-alterar:hover,
+.btn-remover:hover,
+.preco-custom button:hover,
+.lista button:hover {
+  background: #f1f3f4;
+  transform: translateY(-1px);
+}
+
+/* Animação ripple */
+button:active::after,
+.input-area button:active::after,
+.edit-area button:active::after,
+.btn-alterar:active::after,
+.btn-remover:active::after,
+.preco-custom button:active::after,
+.lista button:active::after {
+  width: 250%;
+  height: 250%;
+  opacity: 1;
+}
+
+/* Clique */
+button:active,
+.input-area button:active,
+.edit-area button:active,
+.btn-alterar:active,
+.btn-remover:active,
+.preco-custom button:active,
+.lista button:active {
+  transform: scale(0.97);
+  background: #e8eaed;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+/* Card do Produto */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 0;
+  margin-bottom: 32px;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Campos Editáveis */
+.campo-editavel {
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.campo-editavel strong {
+  color: var(--text-primary);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.campo-editavel span {
+  color: var(--text-primary);
+  font-weight: 400;
+  display: block;
+  padding: 4px 0;
+}
+
+.edit-area {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.edit-area input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+  transition: var(--transition);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.edit-area input:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+/* Descrição e Preço */
+.descricao {
+  background: transparent;
+  padding: 0;
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+  font-family: inherit;
+  line-height: 1.5;
+  border: none;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.preco {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+/* Área de Imagem */
+.imagem-produto,
+.upload-imagem {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.produto-img {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+}
+
+.botoes-imagem {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.upload-imagem p {
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.upload-imagem input {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  width: 100%;
+  max-width: 250px;
+  font-size: 14px;
+}
+
+/* Preço Customizado */
+.preco-custom {
+  background: transparent;
+  margin-top: 24px;
+}
+
+.preco-custom input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  background: var(--surface);
+  transition: var(--transition);
+  max-width: 300px;
+}
+
+.preco-custom input:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+/* Lista */
+.lista {
+  margin-top: 32px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.lista ul {
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.lista li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.lista li:hover {
+  background: #f8f9fa;
+  border-radius: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* Estados de Foco */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin-top: 20px;
+  }
+
+  .input-area {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .input-area button {
+    width: 100%;
+  }
+
+  .edit-area {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .produto-img {
+    max-width: 150px;
+  }
+}
