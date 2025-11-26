@@ -333,7 +333,6 @@ const Dashboard = ({
             setShowPrintTabModal(true);
         }
     };
-
     useEffect(() => {
         let interval;
         if (printWindowRef.current) {
