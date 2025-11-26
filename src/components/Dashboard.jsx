@@ -156,36 +156,34 @@ const Dashboard = ({
     const openQrModal = async () => {
     setShowQrModal(true);
     setQrLoading(true);
-    setQrError('');
+    setQrError("");
 
     try {
-        
         const stream = await navigator.mediaDevices.getUserMedia({
-            video: { 
+            video: {
+                facingMode: "environment",
                 width: { ideal: 1280 },
                 height: { ideal: 720 }
             }
         });
 
         streamRef.current = stream;
-        
+
         if (videoRef.current) {
             videoRef.current.srcObject = stream;
-            
-            videoRef.current.onloadeddata = () => {
+
+            videoRef.current.onloadedmetadata = async () => {
+                await videoRef.current.play().catch(err => {
+                    console.error("Erro ao dar play", err);
+                });
+
                 setQrLoading(false);
                 startQrCodeScan();
             };
-
-            videoRef.current.play().catch(err => {
-                console.error('Erro ao reproduzir vídeo:', err);
-                setQrError('Erro ao iniciar a câmera.');
-                setQrLoading(false);
-            });
         }
     } catch (error) {
-        console.error('Erro detalhado:', error);
-        setQrError(`Erro: ${error.name} - ${error.message}`);
+        console.error(error);
+        setQrError("Erro ao acessar câmera.");
         setQrLoading(false);
     }
 };
@@ -194,52 +192,64 @@ const Dashboard = ({
     try {
         if (!videoRef.current) return;
 
-        // Ativa a câmera
+        setQrLoading(true);
+        setQrError("");
+
+        // --- 1) Ativa a câmera corretamente ---
         const stream = await navigator.mediaDevices.getUserMedia({
             video: {
-                facingMode: 'environment'
+                facingMode: "environment",
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
             }
         });
 
+        streamRef.current = stream;
         videoRef.current.srcObject = stream;
 
-        await new Promise(resolve => {
-            videoRef.current.onloadedmetadata = () => resolve();
-        });
+        // Necessário para evitar tela preta
+        await videoRef.current.play();
 
-        const { BrowserMultiFormatReader } = await import('@zxing/browser');
+        // Importa leitor ZXing
+        const { BrowserMultiFormatReader } = await import("@zxing/browser");
         const codeReader = new BrowserMultiFormatReader();
 
         setQrLoading(false);
 
-        const scan = async () => {
+        // --- 2) Loop de leitura contínua ---
+        const scanLoop = async () => {
             if (!showQrModal) return;
 
             try {
                 const result = await codeReader.decodeOnce(videoRef.current);
 
                 if (result) {
-                    const code = result.getText();
+                    const code = result.getText().trim();
+                    console.log("Código detectado:", code);
 
-                    if (/^\d+$/.test(code)) {
+                    // Aceita EAN8, EAN13, UPC-A, UPC-E (8–14 dígitos)
+                    if (/^\d{8,14}$/.test(code)) {
                         setCodigo(code);
                         closeQrModal();
 
-                        setTimeout(() => onBuscarProduto(), 300);
+                        setTimeout(() => onBuscarProduto(), 150);
+                        return; // PARA o loop
                     } else {
                         setQrError("Código inválido.");
                     }
                 }
-            } catch (_) {
-                requestAnimationFrame(scan);
+            } catch (err) {
+                // Sem código → continua o loop
             }
+
+            requestAnimationFrame(scanLoop);
         };
 
-        scan();
+        scanLoop();
 
-    } catch (error) {
-        console.log(error);
-        setQrError("Erro ao acessar a câmera.");
+    } catch (err) {
+        console.error("Erro no scanner:", err);
+        setQrError("Erro ao iniciar scanner.");
         setQrLoading(false);
     }
 };
@@ -247,25 +257,32 @@ const Dashboard = ({
 
 
     const closeQrModal = () => {
-        setShowQrModal(false);
-        setQrLoading(false);
-        setQrError('');
+    setShowQrModal(false);
+    setQrLoading(false);
+    setQrError("");
 
-        
-        if (streamRef.current) {
-            streamRef.current.getTracks().forEach(track => track.stop());
-            streamRef.current = null;
-        }
+    // Para a câmera
+    if (streamRef.current) {
+        streamRef.current.getTracks().forEach(t => t.stop());
+        streamRef.current = null;
+    }
 
-        if (videoRef.current) {
-            videoRef.current.srcObject = null;
-        }
-    };
+    if (videoRef.current) {
+        videoRef.current.srcObject = null;
+    }
+};
+
+    useEffect(() => {
+    console.log("Código atualizado:", codigo);
+}, [codigo]);
 
     useEffect(() => {
     return () => {
         if (streamRef.current) {
-            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current.getTracks().forEach(track => {
+                track.stop();
+            });
+            streamRef.current = null;
         }
     };
 }, []);
